@@ -1,9 +1,13 @@
+/**
+ * MAIN
+ */
+
 const autor = document.getElementById("inputAutor");
 const titulo = document.getElementById("inputTitulo");
+const autorEdit = document.getElementById("inputAutorEdit");
+const tituloEdit = document.getElementById("inputTituloEdit");
 const tabla = document.getElementById("tbody");
 const inputBuscar = document.getElementById("inputBuscar");
-const tituloNew = document.getElementById("inputTituloNew");
-const autorNew = document.getElementById("inputAutorNew");
 
 const libro = new Libro();
 
@@ -12,34 +16,34 @@ const patern = /^[a-zA-ZÁ-ÿ0-9\s]{3,100}$/;
 function eventListener() {
     document.getElementById("btnAdd").addEventListener("click", prepararLibro);
     tabla.addEventListener("click", acciones);
-    document.getElementById('btnVaciar').addEventListener('click', vaciarLibreria);
-    document.getElementById('btnBuscar').addEventListener('click', BuscarLibro);
-    document.getElementById("btnEditar").addEventListener("click", EditarLibro)
+
+    document.getElementById('btn-vaciar').addEventListener('click', vaciarLibreria);
+
+    document.getElementById('btnBuscar').addEventListener('click', buscarLibro);
 }
 
 eventListener();
-prepararDom();
-
-let ultimoId = Number(LocalStorageOperation.ultimoId())
-ultimoId++
+prepararDOM();
 
 function prepararLibro() {
-    console.log(ultimoId)
+
+    let id = Number(LocalStorageOperation.ultimoID());
+    id++;
+
     if ((autor.value != "" && titulo.value != "") && (patern.test(autor.value) && patern.test(titulo.value))) {
 
-        const infoLibro = {
-            id: ultimoId++,
+        //Arreglo tipo objeto
+        const tipoLibro = {
+            id: id,
             titulo: titulo.value.trim(),
-            autor: autor.value.trim(),
-
+            autor: autor.value.trim()
         }
 
-        let validacionExistencia = LocalStorageOperation.validarTitulo(infoLibro.titulo.trim().toLowerCase(), infoLibro.autor.trim().toLowerCase());
+        let validacionExistencia = LocalStorageOperation.validarTitulo(tipoLibro.titulo.trim().toLowerCase(), tipoLibro.autor.trim().toLowerCase());
         if (validacionExistencia == 0) {
-
-            let tr = libro.agregar(infoLibro);
+            let tr = libro.agregar(tipoLibro);
             tabla.appendChild(tr);
-            LocalStorageOperation.almacenarLibro(infoLibro);
+            LocalStorageOperation.almacenarLibro(tipoLibro);
 
             Swal.fire({
                 position: 'center',
@@ -74,80 +78,112 @@ function prepararLibro() {
 
 function acciones(event) {
     if (event.target.tagName === 'I' || event.target.tagName === 'BUTTON') {
+        //Borrar btn
         if (event.target.className.includes("btn-warning") || event.target.className.includes("fa-trash")) {
             libro.eliminar(event.target);
             Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'Libro eliminado',
-                    showConfirmButton: false,
-                    timer: 1000
-                })
-                // dar click en el boton con clase btn-outline-warning o en el icono con clase fa-edit
-
+                position: 'center',
+                icon: 'success',
+                title: 'Libro eliminado',
+                showConfirmButton: false,
+                timer: 1000
+            })
         }
-        if (event.target.className.includes("btn-success") || event.target.className.includes("fa-edit")) {
-            libro.editar(event.target);
+        //Editar btn
+        if (event.target.className.includes("btn-info") || event.target.className.includes("fa-edit")) {
+
+            document.getElementById('btnEdit').addEventListener("click", () => {
+                if ((autorEdit.value != "" && tituloEdit.value != "") && (patern.test(autorEdit.value) && patern.test(tituloEdit.value))) {
+                    const libroEdit = {
+                        id: 0,
+                        titulo: tituloEdit.value.trim(),
+                        autor: autorEdit.value.trim()
+                    }
+
+                    let verificar = LocalStorageOperation.validarTitulo(libroEdit.titulo.trim().toLowerCase(), libroEdit.autor.trim().toLowerCase());
+                    if (verificar == 0) {
+                        libro.editar(event.target, libroEdit);
+
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'El libro ha sido editado exitosamente',
+                            showConfirmButton: true,
+                            timer: 2500
+                        })
+
+                        window.location.reload();
+                    } else {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'error',
+                            title: 'Datos dados ya existentes',
+                            showConfirmButton: false,
+                            timer: 1700
+                        })
+                    }
+                } else {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'Datos no válidos',
+                        showConfirmButton: false,
+                        timer: 1700
+                    })
+                }
+
+                tituloEdit.value = '';
+                autorEdit.value = '';
+            });
         }
     }
-    // libro.eliminar(event.target.tagName);
 }
 
-function prepararDom() {
+function prepararDOM() {
     const librosLS = LocalStorageOperation.obtenerLS();
-    console.log(librosLS);
 
     for (let i = 0; i < librosLS.length; i++) {
-        console.log("instancia " + i);
-        const instanciaLibro = new Libro();
-        tabla.appendChild(instanciaLibro.agregar(librosLS[i]));
+        let tr = libro.agregar(librosLS[i]);
+        tabla.appendChild(tr);
     }
 }
 
 function vaciarLibreria() {
-    console.log(tabla.firstChild)
+    console.log(tabla.firstChild);
+
     while (tabla.firstChild) {
-        tabla.firstChild.remove()
+        tabla.firstChild.remove();
     }
-    LocalStorageOperation.BorrarStorage()
+
+    LocalStorageOperation.limpiarStorage();
 }
 
-function BuscarLibro(event) {
-    event.preventDefault()
-        // validar el input tenga texto
+function buscarLibro(event) {
+    event.preventDefault();
+
+    //Validar que el input tenga texto
     if (inputBuscar.value != '') {
-        // .trim es para que los espacios en la validacion no entren en la validacion igual .toLowercase para mayusculas
-        // resultado es la salida del metodo BuscarTitulo que se encuentra en LocalStorageOperation
-        let resultado = LocalStorageOperation.BuscarTitulo(inputBuscar.value.trim().toLowerCase())
-        console.log(resultado);
-        if (resultado != '') {
-            Swal.fire(
-                    'Busqueda exitosa',
-                    `El libro con titulo ${resultado.titulo} tiene el id ${resultado.id} y fue escrito por ${resultado.autor}`,
-                    'success'
-                )
-                // cuando la busqueda no genera resultados regresa un '' y se imprime una alerta de error
+        let resultadoBusqueda = LocalStorageOperation.buscarTitulo(inputBuscar.value.trim().toLowerCase());
+
+        if (resultadoBusqueda != '') {
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Busqueda exitosa',
+                text: `El libro ${resultadoBusqueda.autor} tiene el id ${resultadoBusqueda.id} y fue escrito por ${resultadoBusqueda.autor}`,
+                showConfirmButton: false,
+                timer: 1500
+            })
         } else {
-            Swal.fire(
-                'Sin Resultados',
-                `No existe el libro con titulo ${inputBuscar.value}`,
-                'error'
-            )
+            console.log("Naur");
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: `No esta registrado el libro ${inputBuscar.value}`,
+                footer: '<a href>Why do I have this issue?</a>'
+            })
         }
     }
-    inputBuscar.value = ''
-}
 
-function EditarLibro() {
-    if ((autorNew.value != "" && tituloNew.value != "") && (patern.test(autorNew.value) && patern.test(tituloNew.value))) {
-
-        const infoLibroNew = {
-            tituloNew: tituloNew.value.trim(),
-            autorNew: autorNew.value.trim(),
-
-        }
-        let validacionExistencia2 = LocalStorageOperation.validarTitulo2(infoLibroNew.titulo.trim().toLowerCase(), infoLibro.autor.trim().toLowerCase());
-    }
-
-
+    inputBuscar.value = '';
 }

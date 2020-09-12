@@ -4,27 +4,30 @@ class Libro {
     autor = '';
     titulo = '';
 
+    //Metodos
     agregar(infoLibro) {
         this.autor = infoLibro.autor;
         this.titulo = infoLibro.titulo;
         this.id = infoLibro.id;
 
-        console.log(this.id, this.autor, this.titulo);
+        //console.log(this.id, this.autor, this.titulo);
 
         const tr = document.createElement("tr");
+        tr.setAttribute('id', `${this.id}`);
+
         tr.innerHTML = `<th scope="row">${this.id}</th>
-                        <td>${this.titulo}</td>
-                        <td>${this.autor}</td>
-                        <td>
-                            <div class="btn-group" role="" aria-label="Basic example">
-                                <button data-toggle="modal" data-target="#modalAdd2" id="editar${this.id}" type="button" class="btn btn-success">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button id="eliminar${this.id}" type="button" class="btn btn-warning">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>`
+                            <td>${this.titulo}</td>
+                            <td>${this.autor}</td>
+                            <td>
+                                <div class="btn-group" role="" aria-label="Basic example">
+                                    <button id="editar${this.id}" type="button" class="btn btn-info" data-target="#modalEdit" data-toggle="modal">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button id="eliminar${this.id}" type="button" class="btn btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>`
 
         return tr;
     }
@@ -33,17 +36,26 @@ class Libro {
         // element puede tener dos valores ('I', 'BUTTON')
         if (element.tagName === 'I') {
             element.parentElement.parentElement.parentElement.parentElement.remove();
-            LocalStorangeOperation.BorrarLibro(element.parentElement.parentElement.parentElement.parentElement.id)
+            LocalStorageOperation.borrarLibro(element.parentElement.parentElement.parentElement.parentElement.id);
+
         } else {
             element.parentElement.parentElement.parentElement.remove();
-            LocalStorangeOperation.BorrarLibro(element.parentElement.parentElement.parentElement.id)
+            LocalStorageOperation.borrarLibro(element.parentElement.parentElement.parentElement.id);
         }
-        this.id--;
     }
-    editar(infoLibroNew) {
-        this.autor2 = infoLibroNew.autorNew;
-        this.titulo2 = infoLibroNew.tituloNew;
 
 
+    editar(element, arrayLibro) {
+
+        if (element.tagName === 'I') {
+            LocalStorageOperation.editarLibro(element.parentElement.parentElement.parentElement.parentElement.id, arrayLibro);
+        } else {
+            LocalStorageOperation.editarLibro(element.parentElement.parentElement.parentElement.id, arrayLibro);
+        }
+
+        /*console.log("Editancia ON");
+        console.log(element);
+        console.log(arrayLibro.titulo + "++++" + arrayLibro.autor);*/
     }
+
 }

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -9,6 +10,8 @@
     <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/78e29341ce.js" crossorigin="anonymous"></script>
+
+
 </head>
 
 <body>
@@ -22,15 +25,15 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto"></ul>
                 <form class="form-inline my-2 my-lg-0">
-                    <input id="inputBuscar" class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Buscar" />
-                    <button id="btnBuscar" class="btn btn-outline-primary my-2 my-sm-0" type="submit">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Buscar" id="inputBuscar" />
+                    <button class="btn btn-outline-primary my-2 my-sm-0" type="button" id="btnBuscar">
               <i class="fas fa-search"></i> Buscar
             </button>
                 </form>
             </div>
         </nav>
 
-        <div class="jumbotron">
+        <div class="jumbotron pt-3">
             <!-- Botón de agregar -->
             <div class="row text-right">
                 <div class="col-12">
@@ -59,7 +62,10 @@
 
                     </tbody>
                 </table>
-                <button class="btn btn-outline-danger btn-block" id="btnVaciar"><i class="fas fa-trash">Vaciar Papeleria</i></button>
+
+                <button class="btn btn-outline-danger btn-block" id="btn-vaciar">
+            <i class="fas fa-trash mr-2">Vaciar libreria</i>
+          </button>
             </div>
         </div>
     </div>
@@ -100,28 +106,29 @@
             </div>
         </div>
     </div>
+
     <!-- Modal para editar -->
-    <div class="modal fade" id="modalAdd2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Editar Libro</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Que valores deseas editar: </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+                <span aria-hidden="true">&times;</span>
+              </button>
                 </div>
                 <div class="modal-body">
 
                     <form class="d-flex">
 
                         <div class="form-group col-md-6">
-                            <input type="text" name="" id="inputTituloNew" class="form-control" placeholder="" aria-describedby="helpId">
-                            <small id="helId" class="text-muted">Título del libro</small>
+                            <input type="text" name="" id="inputTituloEdit" class="form-control" placeholder="" aria-describedby="helpId">
+                            <small id="helId2" class="text-muted">Título del libro</small>
                         </div>
 
                         <div class="form-group col-md-6">
-                            <input type="text" name="" id="inputAutorNew" class="form-control" placeholder="" aria-describedby="helpId">
-                            <small id="helId" class="text-muted">Nombre del Autor</small>
+                            <input type="text" name="" id="inputAutorEdit" class="form-control" placeholder="" aria-describedby="helpId">
+                            <small id="helId2" class="text-muted">Nombre del Autor</small>
                         </div>
 
                     </form>
@@ -130,7 +137,7 @@
 
                 <div class="modal-footer">
 
-                    <button type="button" class="btn btn-success btn-lg btn-block" data-dismiss="modal" id="btnEditar"><i class="fas fa-check-circle"></i> Aceptar</button>
+                    <button type="button" class="btn btn-success btn-lg btn-block" data-dismiss="modal" id="btnEdit"><i class="fas fa-check-circle"></i> Aceptar</button>
 
                 </div>
             </div>
@@ -147,7 +154,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
     <script src="./js/libro.class.js"></script>
-    <script src="./js/ls.class.js"></script>
+    <script src="./js/LS.class.js"></script>
     <script src="./js/app.js"></script>
 </body>
 

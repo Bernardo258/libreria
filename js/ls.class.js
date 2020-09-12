@@ -1,57 +1,81 @@
 class LocalStorageOperation {
+    //Propiedades
 
+    //Metodos
     static almacenarLibro(infoLibro) {
         let arrayLibros = this.obtenerLS();
         arrayLibros.push(infoLibro);
-        // console.log(arrayLibros);
-        localStorage.setItem("Libros", JSON.stringify(arrayLibros));
+
+        localStorage.setItem('Libros', JSON.stringify(arrayLibros));
     }
 
     static obtenerLS() {
-        if (localStorage.getItem("Libros") == null) {
-            // console.log("Vacío");
-            return []
+        if (localStorage.getItem('Libros') === null) {
+            return []; //para asi tener un array vacio y no un null y asi poder hacer push
         } else {
-            // console.log("Si hay libros");
-            return JSON.parse(localStorage.getItem("Libros"));
+            return JSON.parse(localStorage.getItem('Libros'));
         }
     }
-    static BorrarStorage() {
-        localStorage.clear()
+
+    static limpiarStorage() {
+        localStorage.clear();
+        this.ultimoID();
     }
 
-    static BorrarLibro(idLibro) {
-        // console.log(idLibro)
-        let arrayLibros = this.ObtenerLS()
-        console.log(arrayLibros);
-        let arregloNuevo = []
+    static borrarLibro(idLibro) {
+        let arrayLibros = this.obtenerLS();
+        let arrayAux = [];
 
         for (let i = 0; i < arrayLibros.length; i++) {
-            if (idLibro != arrayLibros[i].id) arregloNuevo.push(arrayLibros[i])
+            if (idLibro != arrayLibros[i].id) {
+                arrayAux.push(arrayLibros[i]);
+            }
         }
-        console.log(arregloNuevo);
-        localStorage.setItem('Libros', JSON.stringify(arregloNuevo))
+        localStorage.clear();
+        if (arrayAux.length > 0) {
+            localStorage.setItem('Libros', JSON.stringify(arrayAux));
+        }
     }
-    static ultimoId() {
-        let arrayLibros = this.obtenerLS()
-        if (arrayLibros == 0) return 0
-        return (arrayLibros[arrayLibros.length - 1].id)
+
+    static editarLibro(idLibro, objEdit) {
+        let arrayLibros = this.obtenerLS();
+        let arrayAux = [];
+
+        for (let i = 0; i < arrayLibros.length; i++) {
+
+            if (idLibro != arrayLibros[i].id) {
+                arrayAux.push(arrayLibros[i]);
+            } else {
+                objEdit.id = arrayLibros[i].id;
+                arrayAux.push(objEdit);
+            }
+        }
+
+        localStorage.setItem('Libros', JSON.stringify(arrayAux));
     }
-    static BuscarTitulo(titulo) {
-        // titulo viene de app.js y es el valor de un imput
-        // para nuestro metodo, titulo sera nuestro parametro de buqueda
-        console.log(titulo);
-        let arrayLibros = this.obtenerLS()
-        let resultado = ''
-            // reiteramis nuestro array de libros mediante un ciclo
-            // ponemos i< arrayLÑibros para ahorrarnos una vuelta de mas en el ciclo
+
+    static ultimoID() {
+        let arrayLibros = this.obtenerLS();
+
+        if (arrayLibros == 0) {
+            return 0;
+        } else {
+            return (arrayLibros[arrayLibros.length - 1].id);
+        }
+    }
+
+    static buscarTitulo(titulo) {
+        let arrayLibros = this.obtenerLS();
+
+        let resultado = '';
+
         for (let i = 0; i < arrayLibros.length; i++) {
             if (arrayLibros[i].titulo.toLowerCase() == titulo) {
                 resultado = arrayLibros[i];
-
             }
         }
-        return resultado
+
+        return resultado;
     }
 
     static validarTitulo(titulo, autor) {
