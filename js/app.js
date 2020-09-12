@@ -146,6 +146,7 @@ function EditarLibro() {
             autorNew: autorNew.value.trim(),
 
         }
+        let validacionExistencia2 = LocalStorageOperation.validarTitulo2(infoLibroNew.titulo.trim().toLowerCase(), infoLibro.autor.trim().toLowerCase());
     }
 
 
