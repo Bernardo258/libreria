@@ -2,6 +2,8 @@ const autor = document.getElementById("inputAutor");
 const titulo = document.getElementById("inputTitulo");
 const tabla = document.getElementById("tbody");
 const inputBuscar = document.getElementById("inputBuscar");
+const tituloNew = document.getElementById("inputTituloNew");
+const autorNew = document.getElementById("inputAutorNew");
 
 const libro = new Libro();
 
@@ -11,7 +13,8 @@ function eventListener() {
     document.getElementById("btnAdd").addEventListener("click", prepararLibro);
     tabla.addEventListener("click", acciones);
     document.getElementById('btnVaciar').addEventListener('click', vaciarLibreria);
-    document.getElementById('btnBuscar').addEventListener('click', BuscarLibro)
+    document.getElementById('btnBuscar').addEventListener('click', BuscarLibro);
+    document.getElementById("btnEditar").addEventListener("click", EditarLibro)
 }
 
 eventListener();
@@ -30,6 +33,7 @@ function prepararLibro() {
             autor: autor.value.trim(),
 
         }
+
         let validacionExistencia = LocalStorageOperation.validarTitulo(infoLibro.titulo.trim().toLowerCase(), infoLibro.autor.trim().toLowerCase());
         if (validacionExistencia == 0) {
 
@@ -73,15 +77,20 @@ function acciones(event) {
         if (event.target.className.includes("btn-warning") || event.target.className.includes("fa-trash")) {
             libro.eliminar(event.target);
             Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: 'Libro eliminado',
-                showConfirmButton: false,
-                timer: 1000
-            })
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Libro eliminado',
+                    showConfirmButton: false,
+                    timer: 1000
+                })
+                // dar click en el boton con clase btn-outline-warning o en el icono con clase fa-edit
+
         }
-        // libro.eliminar(event.target.tagName);
+        if (event.target.className.includes("btn-success") || event.target.className.includes("fa-edit")) {
+            libro.editar(event.target);
+        }
     }
+    // libro.eliminar(event.target.tagName);
 }
 
 function prepararDom() {
@@ -127,4 +136,17 @@ function BuscarLibro(event) {
         }
     }
     inputBuscar.value = ''
+}
+
+function EditarLibro() {
+    if ((autorNew.value != "" && tituloNew.value != "") && (patern.test(autorNew.value) && patern.test(tituloNew.value))) {
+
+        const infoLibroNew = {
+            tituloNew: tituloNew.value.trim(),
+            autorNew: autorNew.value.trim(),
+
+        }
+    }
+
+
 }

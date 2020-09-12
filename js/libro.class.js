@@ -9,7 +9,7 @@ class Libro {
         this.titulo = infoLibro.titulo;
         this.id = infoLibro.id;
 
-        // console.log(this.id, this.autor, this.titulo);
+        console.log(this.id, this.autor, this.titulo);
 
         const tr = document.createElement("tr");
         tr.innerHTML = `<th scope="row">${this.id}</th>
@@ -17,7 +17,7 @@ class Libro {
                         <td>${this.autor}</td>
                         <td>
                             <div class="btn-group" role="" aria-label="Basic example">
-                                <button id="editar${this.id}" type="button" class="btn btn-success">
+                                <button data-toggle="modal" data-target="#modalAdd2" id="editar${this.id}" type="button" class="btn btn-success">
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button id="eliminar${this.id}" type="button" class="btn btn-warning">
@@ -40,5 +40,10 @@ class Libro {
         }
         this.id--;
     }
+    editar(infoLibroNew) {
+        this.autor2 = infoLibroNew.autorNew;
+        this.titulo2 = infoLibroNew.tituloNew;
 
+
+    }
 }
